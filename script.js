@@ -296,6 +296,84 @@ document.querySelectorAll('.product-card').forEach((card, index) => {
     card.style.animationDelay = `${index * 0.1}s`;
 });
 
+// Search and Filter Functionality
+class SearchManager {
+    constructor() {
+        this.searchInput = document.createElement('input');
+        this.searchInput.type = 'text';
+        this.searchInput.placeholder = 'البحث عن منتج...';
+        this.searchInput.className = 'search-input';
+        this.filterSelect = document.createElement('select');
+        this.filterSelect.className = 'filter-select';
+        this.filterSelect.innerHTML = `
+            <option value="all">جميع المنتجات</option>
+            <option value="phones">الهواتف</option>
+            <option value="accessories">الإكسسوارات</option>
+        `;
+        this.init();
+    }
+
+    init() {
+        this.createSearchBar();
+        this.setupEventListeners();
+    }
+
+    createSearchBar() {
+        const productsSection = document.querySelector('#products .container');
+        const searchBar = document.createElement('div');
+        searchBar.className = 'search-bar';
+        searchBar.innerHTML = `
+            <div class="search-controls">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search"></i>
+                    ${this.searchInput.outerHTML}
+                </div>
+                ${this.filterSelect.outerHTML}
+            </div>
+        `;
+        productsSection.insertBefore(searchBar, productsSection.querySelector('.product-grid'));
+        this.searchInput = searchBar.querySelector('.search-input');
+        this.filterSelect = searchBar.querySelector('.filter-select');
+    }
+
+    setupEventListeners() {
+        this.searchInput.addEventListener('input', () => this.filterProducts());
+        this.filterSelect.addEventListener('change', () => this.filterProducts());
+    }
+
+    filterProducts() {
+        const searchTerm = this.searchInput.value.toLowerCase();
+        const filterValue = this.filterSelect.value;
+        const productCards = document.querySelectorAll('#products .product-card');
+
+        productCards.forEach(card => {
+            const productName = card.querySelector('.product-name').textContent.toLowerCase();
+            const productSpecs = card.querySelector('.product-specs').textContent.toLowerCase();
+            const isPhone = !card.closest('#accessories');
+            const isAccessory = card.closest('#accessories');
+
+            let showCard = true;
+
+            // Search filter
+            if (searchTerm && !productName.includes(searchTerm) && !productSpecs.includes(searchTerm)) {
+                showCard = false;
+            }
+
+            // Category filter
+            if (filterValue === 'phones' && !isPhone) {
+                showCard = false;
+            } else if (filterValue === 'accessories' && !isAccessory) {
+                showCard = false;
+            }
+
+            card.style.display = showCard ? 'block' : 'none';
+        });
+    }
+}
+
+// Initialize Search Manager
+const searchManager = new SearchManager();
+
 // Product Management System
 class ProductManager {
     constructor() {
