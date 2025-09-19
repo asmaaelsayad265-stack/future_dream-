@@ -1,0 +1,8 @@
+- [x] Add a new section in index.html for adding products (form with name, specs, price, image URL)
+- [x] Update script.js to handle form submission, create product cards dynamically, save to localStorage, and load on page load
+- [x] Update style.css if needed for the new form styling
+- [x] Create backend server.js with Express to handle product API (GET, POST, DELETE)
+- [x] Create package.json with dependencies for backend
+- [x] Create products.json as data storage for backend
+- [x] Update script.js to use backend API instead of localStorage
+- [ ] Test the full functionality with backend integration
